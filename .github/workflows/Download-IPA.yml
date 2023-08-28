@@ -1,0 +1,26 @@
+name: Download IPA
+on: 
+ workflow_dispatch:
+    inputs:
+      IPAURL:
+        description: 'IPA URL'
+        required: true
+        type: string
+      IPAName:
+        description: 'IPA Name'
+        required: true
+        type: string
+jobs:
+  Download-IPA:
+    runs-on: macos-latest
+    steps:
+     - uses: actions/checkout@v3
+     - name: Download IPA
+       run: curl "${{inputs.IPAURL}}" --output "${{inputs.IPAName}}"
+     - name: Git Push
+       run: |
+            git config user.name github-actions
+            git config user.email github-actions@github.com
+            git add "${{inputs.IPAName}}"
+            git commit -m "Added ${{inputs.IPAName}}"
+            git push
